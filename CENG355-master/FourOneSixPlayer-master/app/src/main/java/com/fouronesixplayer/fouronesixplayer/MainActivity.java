@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button playBtn;
     SeekBar positionBar, volumeBar;
-    TextView elapsedTimeLabel, remainingTimeLabel;
+    ProgressBar progressBar;
+    TextView elapsedTimeLabel, remainingTimeLabel, textView;
     MediaPlayer mp;
     int totalTime;
     private FirebaseAuth mAuth;
@@ -85,11 +87,15 @@ public class MainActivity extends AppCompatActivity {
         );
 
         //Volume Bar
+        textView = (TextView) findViewById(R.id.textView);
+        progressBar =(ProgressBar)findViewById(R.id.progressBar);
         volumeBar = findViewById(R.id.volumeBar);
         volumeBar.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        progressBar.setProgress(progress);
+                        textView.setText(""+progress+"%");
                         float volumeNum=progress / 100f;
                         mp.setVolume(volumeNum, volumeNum);
                     }
@@ -165,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -180,10 +187,6 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_list) {
-            Intent intent3 = new Intent(MainActivity.this, List.class);
-            startActivity(intent3);
-        }
 
         if (id == R.id.action_upload) {
             Intent intent4 = new Intent(MainActivity.this, Upload.class);
@@ -196,11 +199,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent5);
         }
 
+        if (id == R.id.action_songlist) {
+            Intent intent = new Intent(MainActivity.this, MyRecyclerViewActivity.class);
+            startActivity(intent);
+        }
+
         if (id == R.id.action_quit) {
             finishAndRemoveTask();
             return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }

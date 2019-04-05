@@ -10,8 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +26,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+
+import java.net.URL;
 
 
 public class Upload extends AppCompatActivity {
 
-    Button selectFile, upload;
+
+    private DatabaseReference mDatabaseRef;
+
+    Button selectFile, upload, fetch;
     TextView notification;
     Uri songUri; //Uri are URLs that are meant for local storage
 
@@ -41,9 +49,23 @@ public class Upload extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
+
         //FirebaseStorage.getInstance();
         storage= FirebaseStorage.getInstance(); //Returns an object of firebase storage
         database= FirebaseDatabase.getInstance(); // Return an object of firebase database
+
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
+
+        fetch=findViewById(R.id.fetchFiles);
+        fetch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(Upload.this,MyRecyclerViewActivity.class));
+
+            }
+        });
 
         selectFile=findViewById(R.id.selectFile);
         upload=findViewById(R.id.upload);
@@ -75,51 +97,53 @@ public class Upload extends AppCompatActivity {
 
     private void uploadFile(Uri songUri) {
 
+
         progressDialog=new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setTitle("Uploading file...");
         progressDialog.setProgress(0);
         progressDialog.show();
 
-        final String fileName = songUri.getLastPathSegment() + "";
-        final StorageReference storageReference = storage.getReference();
+        final String fileName = songUri.getLastPathSegment() + ".mp3";
+         final String fileName1=songUri.getLastPathSegment()+"";
 
-        storageReference.child("Uploads").child(fileName).putFile(songUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        final StorageReference storageRef = storage.getReference();
+
+
+        storageRef.child("Uploads").child(fileName).putFile(songUri)
+                .addOnSuccessListener(new OnSuccessListener < UploadTask.TaskSnapshot > () {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                        Toast.makeText(Upload.this, "File Uploaded Successfully",Toast.LENGTH_SHORT).show();
+                        final DatabaseReference reference = database.getReference();
+                        storageRef.child("Uploads").child(fileName).getDownloadUrl()
+                                .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            Uri downloadUri = task.getResult();
+                                            reference.child("Uploads").child(fileName1).setValue(downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
 
-                        /*String url=storageReference.getDownloadUrl().toString(); //returns the url of the uploaded file
-
-                        DatabaseReference reference=database.getReference();*/
-
-                       /* reference.child("Uploads").child(fileName).setValue(url).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(Upload.this, "File Uploaded Successfully",Toast.LENGTH_SHORT).show();
-                            }
-                        });*/
-
-                       /* reference.child("Uploads").child(fileName).setValue(url).addOnCompleteListener(new OnCompleteListener<Void>(){
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task){
-
-                                if(task.isSuccessful())
-                                    Toast.makeText(Upload.this, "File Uploaded Successfully",Toast.LENGTH_SHORT).show();
-                                else
-                                    Toast.makeText(Upload.this, "Upload failed",Toast.LENGTH_SHORT).show();
-                            }
-                        });*/
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                                                    if (task.isSuccessful())
+                                                        Toast.makeText(Upload.this, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                                                    else
+                                                        Toast.makeText(Upload.this, "Upload failed", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(Upload.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                         }
+                        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
 
                 Toast.makeText(Upload.this, "Upload failed",Toast.LENGTH_SHORT).show();
             }
-
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {

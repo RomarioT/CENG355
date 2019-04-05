@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.fouronesixplayer.fouronesixplayer">
 
-        <item
-        android:id="@+id/action_list"
-        android:orderInCategory="100"
-        android:title="List All Songs"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_upload"
         android:orderInCategory="200"
         android:title="Upload A Song"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_songlist"
+        android:orderInCategory="200"
+        android:title="Song List"
         app:showAsAction="never" />
 
     <item
