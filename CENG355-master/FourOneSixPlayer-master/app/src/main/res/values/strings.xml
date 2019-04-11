@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FourOneSixPlayer</string>
+    <string name="title_activity_about_us">AboutUs</string>
+    <string name="humber_college">Humber College</string>
+    <string name="about_us_description">This project was created by two students in the computer engineering technology program at Humber College named Romario and Andrew, as their Capstone Project.</string>
+    <string name="todo">TODO</string>
 
 </resources>

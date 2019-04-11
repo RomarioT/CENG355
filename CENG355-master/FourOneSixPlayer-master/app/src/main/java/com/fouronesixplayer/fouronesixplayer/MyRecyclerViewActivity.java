@@ -32,7 +32,7 @@ public class MyRecyclerViewActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                String fileName1=databaseReference.getKey();//returns file name
+                String fileName1=dataSnapshot.getKey();//returns file name
                 String url=dataSnapshot.getValue(String.class);//returns url for file name
 
                 ((MyAdapter)recyclerView.getAdapter()).update(fileName1,url);

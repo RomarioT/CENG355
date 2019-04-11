@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".Login" />
         <activity android:name=".Upload" />
-        <activity android:name=".MyRecyclerViewActivity"></activity>
+        <activity android:name=".MyRecyclerViewActivity" />
+        <activity android:name=".AboutUs"></activity>
     </application>
 
 </manifest>
