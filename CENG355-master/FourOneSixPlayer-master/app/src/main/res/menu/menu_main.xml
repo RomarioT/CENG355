@@ -16,6 +16,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_aboutus"
+        android:orderInCategory="200"
+        android:title="About Us"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_signout"
         android:orderInCategory="300"
         android:title="Sign Out"

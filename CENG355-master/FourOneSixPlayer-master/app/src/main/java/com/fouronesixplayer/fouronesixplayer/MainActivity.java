@@ -24,7 +24,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mp;
     int totalTime;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private Button mFirebaseBtn, mFirebaseBtn2;
 
 
     @Override
@@ -45,6 +50,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
+        //Play and StopButton
+       mFirebaseBtn = (Button) findViewById(R.id.firebase_btn);
+
+       mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mFirebaseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.child("Play").setValue(1);
+            }
+        });
+
+        mFirebaseBtn2 = (Button) findViewById(R.id.firebase_btn2);
+        mFirebaseBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.child("Play").setValue(0);
+            }
+        });
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -57,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         totalTime = mp.getDuration();
 
         //Buttons & Time
-        playBtn = findViewById(R.id.playBtn);
+       // playBtn = findViewById(R.id.playBtn);
         elapsedTimeLabel = findViewById(R.id.elapsedTimeLabel);
         remainingTimeLabel = findViewById(R.id.remainingTimeLabel);
 
@@ -157,8 +182,9 @@ public class MainActivity extends AppCompatActivity {
         return timeLabel;
     }
 
-    public void playBtnClick (View view){
-        if (!mp.isPlaying()){
+  /* public void playBtnClick (View view){
+
+          if (!mp.isPlaying()){
             //Stopping
             mp.start();
             playBtn.setBackgroundResource(R.drawable.stop);
@@ -167,10 +193,8 @@ public class MainActivity extends AppCompatActivity {
             mp.pause();
             playBtn.setBackgroundResource(R.drawable.play);
         }
-    }
 
-
-
+    } */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,6 +225,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_songlist) {
             Intent intent = new Intent(MainActivity.this, MyRecyclerViewActivity.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.action_aboutus) {
+            Intent intent = new Intent(MainActivity.this, AboutUs.class);
             startActivity(intent);
         }
 
