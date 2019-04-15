@@ -9,3 +9,13 @@
       
       
 # 2) Operation Of The Applications
+      
+     Login to the Android application.
+     Choose a song to play, stored on the Firebase Database.
+     On boot up of the Raspberry pi the Python applciation will automatically run.
+     After pressing play on the android applciaiton that will in tern control the raspberry pi.
+     Ensure to always properly shurdown the Raspberry pi correctly to avoid corruption.
+     
+# 3) Engineers of this project.
+      Romario Kevin Tulloch
+      Andrew Le
