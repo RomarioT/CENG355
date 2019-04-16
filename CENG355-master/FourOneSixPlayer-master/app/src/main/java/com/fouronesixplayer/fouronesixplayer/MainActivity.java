@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     int totalTime;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private Button mFirebaseBtn, mFirebaseBtn2;
+    private Button mFirebaseBtn, mFirebaseBtn2, mFirebaseBtn3;
 
 
     @Override
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 mDatabase.child("Play").setValue(0);
             }
         });
+
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -120,9 +121,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         progressBar.setProgress(progress);
-                        textView.setText(""+progress+"%");
+                        textView.setText(""+progress);
                         float volumeNum=progress / 100f;
                         mp.setVolume(volumeNum, volumeNum);
+
                     }
 
                     @Override
@@ -136,6 +138,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        //Volume Upload
+        mFirebaseBtn3 = (Button) findViewById(R.id.uploadVolume);
+        mFirebaseBtn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.child("Volume").setValue(textView.getText());
+            }
+        });
 
         //Thread (Update positionBar and timeLabel)
         new Thread(new Runnable() {
@@ -181,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
         timeLabel +=sec;
         return timeLabel;
     }
+
+
 
   /* public void playBtnClick (View view){
 

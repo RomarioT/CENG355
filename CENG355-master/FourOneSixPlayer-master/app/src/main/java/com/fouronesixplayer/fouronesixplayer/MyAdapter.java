@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
@@ -18,6 +21,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
     Context context;
     ArrayList<String> items=new ArrayList<>();
     ArrayList<String> urls=new ArrayList<>();
+
+    private DatabaseReference mDatabase;
 
     public void update(String name, String url){
         items.add(name);
@@ -62,11 +67,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
                 @Override
                 public void onClick(View view) {
 
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+
                     int position=recyclerView.getChildLayoutPosition(view);
                     Intent intent=new Intent();
                     intent.setType(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(urls.get(position)));
                     context.startActivity(intent);
+
+                    mDatabase.child("URL").setValue(urls.get(position));
+
 
                 }
             });

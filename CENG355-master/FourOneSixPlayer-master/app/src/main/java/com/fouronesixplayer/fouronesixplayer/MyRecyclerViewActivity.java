@@ -20,11 +20,13 @@ import java.util.ArrayList;
 public class MyRecyclerViewActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_recycler_view);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         final DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Uploads");
 
